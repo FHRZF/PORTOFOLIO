@@ -4,39 +4,69 @@ export default function Achievements() {
   const achievements = [
     {
       id: 1,
-      title: 'Juara 1 Lomba Desain UI/UX Nasional',
-      issuer: 'National Digital Awards 2023',
-      description: 'Menduduki peringkat pertama dalam kategori Desain UI/UX tingkat nasional berkat inovasi purwarupa antarmuka aplikasi kesehatan mental terintegrasi.',
-      date: '2023',
       icon: '🏆',
-      color: 'from-amber-400 to-yellow-600',
+      title: 'Juara 1 — Lomba UI/UX Nasional',
+      issuer: 'National Digital Innovation Awards 2023',
+      description: 'Meraih peringkat pertama kategori UI/UX Design tingkat nasional berkat inovasi desain aplikasi kesehatan mental berbasis AI (HealthAI) yang mendapat SUS Score 94/100.',
+      date: '2023',
+      accent: '#f59e0b',
+      gradFrom: '#f59e0b',
+      gradTo: '#d97706',
     },
     {
       id: 2,
-      title: 'Sertifikat Keahlian Web Development',
-      issuer: 'Coursera | Full Stack Web Development',
-      description: 'Menyelesaikan program sertifikasi lanjutan pengembangan web fullstack (MERN stack + Laravel) dengan predikat kehormatan (with Honors).',
+      icon: '🎓',
+      title: 'Google UX Design Professional Certificate',
+      issuer: 'Google — Coursera Professional Certification',
+      description: 'Sertifikasi profesional resmi dari Google mencakup empati-driven research, wireframing, high-fidelity prototyping, usability evaluation, dan accessibility design standards.',
       date: '2023',
-      icon: '📜',
-      color: 'from-blue-400 to-indigo-600',
+      accent: '#a855f7',
+      gradFrom: '#7c3aed',
+      gradTo: '#a855f7',
     },
     {
       id: 3,
-      title: 'Google UX Design Professional Certificate',
-      issuer: 'Google | Coursera Professional Certificate',
-      description: 'Sertifikasi profesional resmi dari Google mencakup riset UX, perancangan kawat (wireframing), purwarupa interaktif, dan evaluasi kegunaan produk.',
-      date: '2022',
-      icon: '🎓',
-      color: 'from-red-400 to-pink-600',
+      icon: '📜',
+      title: 'Full Stack Web Development — With Honors',
+      issuer: 'Coursera | MERN Stack + Laravel Specialization',
+      description: 'Menyelesaikan program sertifikasi pengembangan web fullstack (React, Node.js, Laravel, MongoDB) selama 6 bulan dengan predikat kehormatan (With Honors) dan nilai akhir 97/100.',
+      date: '2023',
+      accent: '#06b6d4',
+      gradFrom: '#0284c7',
+      gradTo: '#06b6d4',
     },
     {
       id: 4,
-      title: 'Lulusan Terbaik Program Studi Rekayasa Perangkat Lunak',
-      issuer: 'Universitas Terkemuka',
-      description: 'Lulus dari program studi Rekayasa Perangkat Lunak (RPL) dengan predikat Cum Laude dan meraih IPK akhir 3.85 / 4.00.',
-      date: '2022',
       icon: '⭐',
-      color: 'from-emerald-400 to-teal-600',
+      title: 'Lulusan Terbaik — Rekayasa Perangkat Lunak',
+      issuer: 'Program Studi Software Engineering',
+      description: 'Lulus dari program S1 Rekayasa Perangkat Lunak dengan predikat Cum Laude, meraih IPK akhir 3.85/4.00, dan dinobatkan sebagai mahasiswa berprestasi tingkat program studi.',
+      date: '2024',
+      accent: '#10b981',
+      gradFrom: '#059669',
+      gradTo: '#10b981',
+    },
+    {
+      id: 5,
+      icon: '🚀',
+      title: 'Top Contributor — Open Source Community',
+      issuer: 'GitHub Indonesia Developer Community',
+      description: 'Diakui sebagai top contributor aktif dalam komunitas developer open-source Indonesia dengan 50+ pull request diterima, 200+ GitHub stars, dan aktif mentoring developer junior.',
+      date: '2024',
+      accent: '#ec4899',
+      gradFrom: '#be185d',
+      gradTo: '#ec4899',
+    },
+    {
+      id: 6,
+      icon: '💡',
+      title: 'Best Prototype — Hackathon Inovasi Digital',
+      issuer: 'Ministry of Communication & Digital — Indonesia',
+      description: 'Prototype SmartCity Management Platform yang dikembangkan dalam 48 jam hackathon berhasil meraih penghargaan Best Prototype dari Kementerian Kominfo RI.',
+      date: '2024',
+      accent: '#f97316',
+      gradFrom: '#ea580c',
+      gradTo: '#f97316',
     },
   ]
 
@@ -45,76 +75,132 @@ export default function Achievements() {
     visible: (i) => ({
       opacity: 1,
       y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.6,
-        ease: 'easeOut',
-      },
+      transition: { delay: i * 0.1, duration: 0.6, ease: 'easeOut' },
     }),
   }
 
   return (
-    <section id="achievements" className="py-24 px-6 bg-white dark:bg-gray-900 theme-transition">
+    <section id="achievements" className="py-24 px-6" style={{ backgroundColor: '#0a0a0f' }}>
       <div className="max-w-6xl mx-auto">
-        {/* Title */}
-        <motion.h2
+        {/* Header */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight"
+          className="text-center mb-16"
         >
-          Pencapaian & Sertifikasi
-        </motion.h2>
+          <p className="text-purple-400 font-mono text-sm tracking-widest uppercase mb-3">// achievements</p>
+          <h2 className="font-grotesk text-4xl md:text-5xl font-bold text-white mb-4">
+            Pencapaian &amp; <span className="gradient-text-cyber">Sertifikasi</span>
+          </h2>
+          <p className="text-gray-500 max-w-xl mx-auto text-sm">
+            Rekam jejak penghargaan, sertifikasi profesional, dan pencapaian akademik yang mendefinisikan perjalanan karir saya.
+          </p>
+          <div className="section-underline mt-4" />
+        </motion.div>
 
+        {/* Grid */}
         <motion.div
-          initial={{ width: 0 }}
-          whileInView={{ width: 60 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="h-1.5 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 rounded-full mx-auto mb-16"
-        ></motion.div>
-
-        {/* Achievements Grid */}
-        <motion.div
-          className="grid md:grid-cols-2 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.1 }}
         >
-          {achievements.map((achievement, idx) => (
+          {achievements.map((item, idx) => (
             <motion.div
-              key={achievement.id}
+              key={item.id}
               custom={idx}
               variants={cardVariants}
-              whileHover={{ y: -6, scale: 1.01 }}
-              className="bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-900 dark:to-gray-850 border border-gray-100 dark:border-gray-800 p-8 rounded-3xl hover:shadow-xl dark:hover:shadow-black/25 transition-all duration-300 flex items-start gap-6 group"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="relative p-7 rounded-3xl flex flex-col gap-4 group card-hover-glow overflow-hidden"
+              style={{
+                background: 'rgba(19,19,42,0.85)',
+                border: `1px solid ${item.accent}22`,
+              }}
             >
-              {/* Icon badge with gradient border */}
-              <div className="w-16 h-16 rounded-2xl bg-white dark:bg-gray-850 shadow-md flex items-center justify-center text-3xl flex-shrink-0 border border-gray-100 dark:border-gray-750 group-hover:scale-110 transition-transform">
-                {achievement.icon}
+              {/* Background glow */}
+              <div
+                className="absolute top-0 right-0 w-28 h-28 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: `radial-gradient(circle, ${item.accent}20 0%, transparent 70%)` }}
+              />
+
+              {/* Top row */}
+              <div className="flex items-start justify-between gap-3">
+                {/* Icon badge */}
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                  style={{
+                    background: `${item.accent}15`,
+                    border: `1px solid ${item.accent}30`,
+                    boxShadow: `0 0 15px ${item.accent}20`,
+                  }}
+                >
+                  {item.icon}
+                </div>
+
+                {/* Year badge */}
+                <span
+                  className="text-xs font-mono font-bold px-3 py-1 rounded-full flex-shrink-0"
+                  style={{
+                    background: `${item.accent}15`,
+                    border: `1px solid ${item.accent}30`,
+                    color: item.accent,
+                  }}
+                >
+                  {item.date}
+                </span>
               </div>
 
-              {/* Text content */}
-              <div className="flex-1 space-y-2">
-                <div className="flex justify-between items-start gap-4 flex-wrap">
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {achievement.title}
-                  </h3>
-                  <span className="text-xs font-bold text-blue-600 dark:text-blue-450 bg-blue-50 dark:bg-blue-950/45 px-3 py-1 rounded-full uppercase tracking-wider">
-                    {achievement.date}
-                  </span>
-                </div>
-                
-                <p className="text-sm font-semibold text-gray-500 dark:text-gray-405">
-                  {achievement.issuer}
+              {/* Content */}
+              <div className="space-y-2 flex-1">
+                <h3
+                  className="font-grotesk font-bold text-base text-white group-hover:transition-colors"
+                  style={{ lineHeight: '1.4' }}
+                >
+                  {item.title}
+                </h3>
+                <p
+                  className="text-xs font-semibold uppercase tracking-wider"
+                  style={{ color: item.accent }}
+                >
+                  {item.issuer}
                 </p>
-                
-                <p className="text-gray-600 dark:text-gray-450 text-sm leading-relaxed pt-1">
-                  {achievement.description}
+                <p className="text-gray-500 text-sm leading-relaxed pt-1">
+                  {item.description}
                 </p>
               </div>
+
+              {/* Bottom accent bar */}
+              <div
+                className="h-px w-full rounded-full opacity-40 group-hover:opacity-80 transition-opacity"
+                style={{ background: `linear-gradient(to right, ${item.gradFrom}, ${item.gradTo}, transparent)` }}
+              />
             </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Stats Summary */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mt-14 grid grid-cols-3 gap-4 max-w-lg mx-auto"
+        >
+          {[
+            { value: '6+', label: 'Penghargaan' },
+            { value: '3.85', label: 'IPK Akhir' },
+            { value: 'Cum Laude', label: 'Predikat Kelulusan' },
+          ].map((s, i) => (
+            <div
+              key={i}
+              className="text-center p-4 rounded-2xl"
+              style={{ background: 'rgba(19,19,42,0.6)', border: '1px solid rgba(168,85,247,0.12)' }}
+            >
+              <div className="font-grotesk font-bold text-xl gradient-text-cyber">{s.value}</div>
+              <div className="text-gray-500 text-xs mt-1">{s.label}</div>
+            </div>
           ))}
         </motion.div>
       </div>

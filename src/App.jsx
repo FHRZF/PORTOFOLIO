@@ -25,7 +25,9 @@ function AppContent() {
   }, [])
 
   return (
-    <div className="bg-white text-gray-900 dark:bg-gray-950 dark:text-white min-h-screen theme-transition">
+    <div className="min-h-screen" style={{ backgroundColor: '#0a0a0f', color: '#e2e8f0' }}>
+      {/* Global scanning line effect */}
+      <div className="scan-line" />
       <Navbar />
       <Hero />
       <About />

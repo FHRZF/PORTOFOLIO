@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { HiOutlineMail, HiOutlineExternalLink } from 'react-icons/hi'
 import { FaGithub, FaLinkedin, FaInstagram, FaPaperPlane } from 'react-icons/fa'
 import confetti from 'canvas-confetti'
+import emailjs from '@emailjs/browser'
 
 export default function Contact() {
+  const formRef = useRef()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,7 +30,7 @@ export default function Contact() {
       name: 'GitHub',
       value: 'github.com/fahrizfitra',
       icon: FaGithub,
-      link: 'https://github.com',
+      link: 'https://github.com/fahrizfitra',
       color: 'text-gray-800 dark:text-gray-200',
       bg: 'bg-gray-100/50 dark:bg-gray-800/30',
     },
@@ -37,7 +39,7 @@ export default function Contact() {
       name: 'LinkedIn',
       value: 'linkedin.com/in/fahrizfitra',
       icon: FaLinkedin,
-      link: 'https://linkedin.com',
+      link: 'https://linkedin.com/in/fahrizfitra',
       color: 'text-blue-600 dark:text-blue-450',
       bg: 'bg-blue-100/30 dark:bg-blue-900/10',
     },
@@ -46,7 +48,7 @@ export default function Contact() {
       name: 'Instagram',
       value: '@fahrizfitra',
       icon: FaInstagram,
-      link: 'https://instagram.com',
+      link: 'https://instagram.com/fahrizfitra',
       color: 'text-pink-600 dark:text-pink-400',
       bg: 'bg-pink-50/50 dark:bg-pink-950/20',
     },
@@ -63,23 +65,45 @@ export default function Contact() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate sending message
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsSent(true)
-      setFormData({ name: '', email: '', message: '' })
+    // TODO: Ganti dengan ID EmailJS yang sebenarnya
+    // Dapatkan dari https://dashboard.emailjs.com/
+    const serviceId = 'YOUR_SERVICE_ID'
+    const templateId = 'YOUR_TEMPLATE_ID'
+    const publicKey = 'YOUR_PUBLIC_KEY'
 
-      // Celebrate success!
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.8 },
-        colors: ['#3b82f6', '#8b5cf6', '#10b981']
+    if (serviceId === 'YOUR_SERVICE_ID') {
+      // Fallback ke simulasi jika EmailJS belum diatur (agar form tidak error saat belum disetting)
+      setTimeout(() => {
+        setIsSubmitting(false)
+        setIsSent(true)
+        setFormData({ name: '', email: '', message: '' })
+        confetti({ particleCount: 120, spread: 70, origin: { y: 0.8 }, colors: ['#3b82f6', '#8b5cf6', '#10b981'] })
+        setTimeout(() => setIsSent(false), 5000)
+      }, 1500)
+      return
+    }
+
+    emailjs.sendForm(serviceId, templateId, formRef.current, publicKey)
+      .then(() => {
+        setIsSubmitting(false)
+        setIsSent(true)
+        setFormData({ name: '', email: '', message: '' })
+
+        // Celebrate success!
+        confetti({
+          particleCount: 120,
+          spread: 70,
+          origin: { y: 0.8 },
+          colors: ['#3b82f6', '#8b5cf6', '#10b981']
+        })
+
+        // Clear success notification after 5 seconds
+        setTimeout(() => setIsSent(false), 5000)
+      }, (error) => {
+        setIsSubmitting(false)
+        console.error('EmailJS Error:', error.text)
+        alert('Maaf, pesan gagal terkirim. Silakan coba beberapa saat lagi.')
       })
-
-      // Clear success notification after 5 seconds
-      setTimeout(() => setIsSent(false), 5000)
-    }, 1500)
   }
 
   const containerVariants = {
@@ -186,6 +210,7 @@ export default function Contact() {
             className="lg:col-span-7"
           >
             <form
+              ref={formRef}
               onSubmit={handleSubmit}
               className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-850 p-8 md:p-10 rounded-3xl shadow-xl dark:shadow-black/20 flex flex-col gap-6 h-full justify-between"
             >

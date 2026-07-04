@@ -1,4 +1,4 @@
-/* Global app styles */
+/* Global app styles — Cyberpunk Edition */
 
 button {
   font-family: inherit;
@@ -8,22 +8,84 @@ a {
   text-decoration: none;
 }
 
-/* Glassmorphism utility classes */
+/* ─── Glassmorphism Navbar ──────────────── */
 .glass-effect {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(10, 10, 15, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(168, 85, 247, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
-.dark .glass-effect {
-  background: rgba(17, 24, 39, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Smooth color transitions for dark mode */
+/* ─── Theme Transition ───────────────────── */
 .theme-transition {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, fill 0.3s ease;
 }
+
+/* ─── Progress Bar Gradient ──────────────── */
+.progress-bar {
+  height: 4px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, #7c3aed, #a855f7, #06b6d4);
+  position: relative;
+  overflow: hidden;
+}
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmerBar 2s infinite;
+}
+@keyframes shimmerBar {
+  0%   { left: -100%; }
+  100% { left: 100%;  }
+}
+
+/* ─── Neon Button ────────────────────────── */
+.btn-neon {
+  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 14px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35);
+}
+.btn-neon:hover {
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.6), 0 0 80px rgba(168, 85, 247, 0.3);
+  transform: translateY(-2px);
+}
+.btn-neon::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s;
+}
+.btn-neon:hover::before { left: 100%; }
+
+.btn-ghost-neon {
+  background: transparent;
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #c084fc;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 14px 32px;
+  transition: all 0.3s ease;
+}
+.btn-ghost-neon:hover {
+  background: rgba(168, 85, 247, 0.1);
+  border-color: rgba(168, 85, 247, 0.8);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  color: #e879f9;
+}
+
+/* ─── Section Background Helpers ─────────── */
+.section-dark    { background-color: #0a0a0f; }
+.section-darker  { background-color: #0d0d1a; }
+.section-card    { background-color: #13132a; }

@@ -1,126 +1,216 @@
 import { motion } from 'framer-motion'
-import { HiArrowNarrowRight, HiOutlineArrowSmDown } from 'react-icons/hi'
+import { HiArrowNarrowRight, HiDownload } from 'react-icons/hi'
+import { RiCodeSSlashLine, RiPencilRuler2Line, RiStarLine } from 'react-icons/ri'
 import confetti from 'canvas-confetti'
+import ParticleText from './ParticleText'
 
 export default function Hero() {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
+      transition: { staggerChildren: 0.18, delayChildren: 0.3 },
     },
   }
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 40 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: 'easeOut' },
+      transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] },
     },
   }
 
   const handleDownloadCV = () => {
-    // Fire confetti!
     confetti({
-      particleCount: 150,
-      spread: 80,
+      particleCount: 200,
+      spread: 100,
       origin: { y: 0.6 },
-      colors: ['#3b82f6', '#8b5cf6', '#ec4899', '#10b981']
+      colors: ['#a855f7', '#7c3aed', '#06b6d4', '#ec4899', '#10b981'],
+      startVelocity: 40,
     })
-
-    // Mock PDF download trigger
     setTimeout(() => {
-      alert("Terima kasih telah mengunduh! CV Fahriz Fitra Annas siap diunduh (Simulasi file PDF).")
-    }, 500)
+      // Trigger actual file download
+      const link = document.createElement('a')
+      link.href = '/cv-fahriz-fitra.pdf'
+      link.download = 'CV_Fahriz_Fitra_Annas.pdf'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }, 600)
   }
 
-  return (
-    <section id="home" className="min-h-[calc(100vh-80px)] flex items-center justify-center relative overflow-hidden py-16 theme-transition bg-white dark:bg-gray-950">
-      {/* Background gradients */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-white to-purple-50/50 dark:from-blue-950/20 dark:via-gray-950 dark:to-purple-950/20 -z-10 transition-colors duration-500"></div>
-      
-      {/* Dynamic blurred abstract circles */}
-      <div className="absolute top-20 right-10 w-72 h-72 bg-blue-200/40 dark:bg-blue-900/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-60 dark:opacity-30 -z-10 animate-pulse-slow"></div>
-      <div className="absolute bottom-10 left-10 w-80 h-80 bg-purple-200/40 dark:bg-purple-900/10 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-60 dark:opacity-30 -z-10 animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+  const stats = [
+    { icon: RiCodeSSlashLine,    value: '30+',   label: 'Proyek Selesai' },
+    { icon: RiPencilRuler2Line,  value: '15+',   label: 'Desain UI/UX'  },
+    { icon: RiStarLine,          value: '100%',  label: 'Kepuasan Klien' },
+  ]
 
+  const roles = ['UI/UX Designer', 'Web Developer', 'Creative Coder', 'Digital Craftsman']
+
+  return (
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
+      style={{ backgroundColor: '#0a0a0f' }}
+    >
+      {/* Cyber Grid Background */}
+      <div
+        className="absolute inset-0 cyber-grid-bg opacity-100"
+        style={{ backgroundSize: '50px 50px' }}
+      />
+
+      {/* Animated Gradient Orbs */}
+      <div className="absolute top-1/4 right-10 w-96 h-96 rounded-full blur-3xl animate-float"
+        style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)' }} />
+      <div className="absolute bottom-1/4 left-10 w-80 h-80 rounded-full blur-3xl animate-float-delay"
+        style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%)' }} />
+      <div className="absolute top-10 left-1/3 w-64 h-64 rounded-full blur-3xl"
+        style={{ background: 'radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 70%)', animation: 'float 8s ease-in-out 4s infinite' }} />
+
+      {/* Corner Decorators */}
+      <div className="absolute top-24 left-6 text-purple-500/20 font-mono text-xs select-none">
+        <div>&lt;portfolio&gt;</div>
+        <div className="pl-4 text-cyan-500/20">function createMagic()</div>
+        <div className="pl-4 text-cyan-500/20">{'{'}</div>
+      </div>
+      <div className="absolute bottom-10 right-6 text-purple-500/20 font-mono text-xs select-none text-right">
+        <div>{'}'}</div>
+        <div>&lt;/portfolio&gt;</div>
+      </div>
+
+      {/* Main Content */}
       <motion.div
-        className="text-center max-w-4xl px-6 z-10 flex flex-col items-center"
+        className="relative z-10 text-center max-w-5xl mx-auto px-6 py-16"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
-        {/* Designer Intro Badge */}
-        <motion.div
-          variants={itemVariants}
-          className="mb-6 px-4 py-1.5 rounded-full border border-blue-200 dark:border-blue-900 bg-blue-50/50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 text-sm font-semibold tracking-wide uppercase"
-        >
-          🚀 Tersedia Untuk Kerja Lepas / Kontrak
+        {/* Status Badge */}
+        <motion.div variants={itemVariants} className="mb-8 flex justify-center">
+          <div
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold font-mono"
+            style={{
+              background: 'rgba(16,185,129,0.1)',
+              border: '1px solid rgba(16,185,129,0.3)',
+              color: '#34d399',
+              boxShadow: '0 0 20px rgba(16,185,129,0.15)',
+            }}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            Available for Freelance &amp; Contract Work
+          </div>
         </motion.div>
 
-        {/* Main Title */}
-        <motion.h1
-          variants={itemVariants}
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight tracking-tight"
-        >
-          FAHRIZ FITRA ANNAS
-        </motion.h1>
+        {/* Role Tags */}
+        <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-2 mb-6">
+          {roles.map((role, i) => (
+            <span key={i} className="cyber-tag">{role}</span>
+          ))}
+        </motion.div>
 
-        {/* Subtitle */}
+        {/* Main Heading — Particle Effect */}
+        <motion.div variants={itemVariants} className="w-full mb-6 flex justify-center">
+          <div className="w-full max-w-4xl">
+            <ParticleText />
+          </div>
+        </motion.div>
+
+        {/* Animated Role Subtitle */}
         <motion.p
           variants={itemVariants}
-          className="text-xl sm:text-2xl md:text-3xl text-gray-600 dark:text-gray-300 font-light mb-6 flex items-center gap-2"
+          className="text-lg sm:text-xl md:text-2xl font-medium mb-4 text-gray-300"
         >
-          <span className="font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">UI/UX Designer</span>
-          <span className="text-gray-300 dark:text-gray-700">|</span>
-          <span className="font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">Web Developer</span>
+          Merancang{' '}
+          <span className="gradient-text-cyber font-bold">Pengalaman Digital</span>{' '}
+          yang Intuitif &amp;{' '}
+          <span style={{ color: '#06b6d4', fontWeight: 700 }}>Berkinerja Tinggi</span>
         </motion.p>
 
         {/* Tagline */}
         <motion.p
           variants={itemVariants}
-          className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed"
+          className="text-sm sm:text-base text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed font-mono"
         >
-          Mendesain pengalaman digital yang intuitif dan membangun antarmuka web modern berkinerja tinggi yang disukai pengguna.
+          // Membangun antarmuka web modern dengan React, Laravel &amp; Figma
+          <br />
+          // Dari wireframe hingga kode — semua dikerjakan dengan presisi &amp; passion
         </motion.p>
 
         {/* CTA Buttons */}
         <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row gap-4 justify-center mb-16 w-full sm:w-auto"
+          className="flex flex-col sm:flex-row gap-4 justify-center mb-20"
         >
           <a href="#portfolio" className="w-full sm:w-auto">
             <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full sm:w-auto bg-gray-900 dark:bg-white text-white dark:text-gray-950 px-8 py-4 rounded-xl font-bold hover:bg-gray-800 dark:hover:bg-gray-100 shadow-lg shadow-gray-900/10 dark:shadow-white/5 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+              className="btn-neon w-full sm:w-auto flex items-center justify-center gap-2 group cursor-pointer font-grotesk"
             >
-              Lihat Karya
-              <HiArrowNarrowRight className="group-hover:translate-x-1.5 transition-transform text-lg" />
+              Lihat Karya Terbaik
+              <HiArrowNarrowRight className="group-hover:translate-x-2 transition-transform text-lg" />
             </motion.button>
           </a>
+
           <motion.button
             onClick={handleDownloadCV}
-            whileHover={{ scale: 1.05, y: -2 }}
+            whileHover={{ scale: 1.05, y: -3 }}
             whileTap={{ scale: 0.95 }}
-            className="w-full sm:w-auto border-2 border-gray-900 dark:border-gray-750 text-gray-900 dark:text-white px-8 py-4 rounded-xl font-bold hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-950 shadow-md transition-all flex items-center justify-center cursor-pointer"
+            className="btn-ghost-neon w-full sm:w-auto flex items-center justify-center gap-2 cursor-pointer font-grotesk"
           >
+            <HiDownload className="text-lg" />
             Unduh CV / Resume
           </motion.button>
+        </motion.div>
+
+        {/* Stats Row */}
+        <motion.div
+          variants={itemVariants}
+          className="grid grid-cols-3 gap-4 max-w-lg mx-auto"
+        >
+          {stats.map(({ icon: Icon, value, label }, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ y: -4, scale: 1.05 }}
+              className="text-center p-4 rounded-2xl cursor-default card-hover-glow"
+              style={{
+                background: 'rgba(19,19,42,0.6)',
+                border: '1px solid rgba(168,85,247,0.15)',
+              }}
+            >
+              <Icon className="text-purple-400 text-xl mx-auto mb-1" />
+              <div
+                className="font-grotesk font-bold text-xl gradient-text-cyber"
+              >
+                {value}
+              </div>
+              <div className="text-xs text-gray-500 mt-0.5 font-medium">{label}</div>
+            </motion.div>
+          ))}
         </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div
           variants={itemVariants}
-          animate={{ y: [0, 12, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="flex justify-center text-gray-400 dark:text-gray-600 mt-4 cursor-pointer"
+          className="mt-16 flex flex-col items-center gap-2 cursor-pointer"
           onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <HiOutlineArrowSmDown className="text-4xl" />
+          <span className="text-xs text-gray-600 font-mono tracking-widest uppercase">Scroll Down</span>
+          <div
+            className="w-6 h-10 rounded-full flex items-start justify-center pt-2"
+            style={{ border: '1px solid rgba(168,85,247,0.3)' }}
+          >
+            <motion.div
+              className="w-1 h-2 rounded-full"
+              style={{ background: 'linear-gradient(to bottom, #a855f7, #06b6d4)' }}
+              animate={{ y: [0, 12, 0], opacity: [1, 0, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          </div>
         </motion.div>
       </motion.div>
     </section>

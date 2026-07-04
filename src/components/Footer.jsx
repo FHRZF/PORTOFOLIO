@@ -5,9 +5,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   const socials = [
-    { name: 'GitHub', icon: FaGithub, href: 'https://github.com' },
-    { name: 'LinkedIn', icon: FaLinkedin, href: 'https://linkedin.com' },
-    { name: 'Instagram', icon: FaInstagram, href: 'https://instagram.com' },
+    { name: 'GitHub', icon: FaGithub, href: 'https://github.com/fahrizfitra' },
+    { name: 'LinkedIn', icon: FaLinkedin, href: 'https://linkedin.com/in/fahrizfitra' },
+    { name: 'Instagram', icon: FaInstagram, href: 'https://instagram.com/fahrizfitra' },
   ]
 
   return (

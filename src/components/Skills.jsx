@@ -1,111 +1,222 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { RiPencilRuler2Line, RiCodeSSlashLine, RiToolsLine } from 'react-icons/ri'
 
 export default function Skills() {
+  const [hoveredSkill, setHoveredSkill] = useState(null)
+
   const skillCategories = [
     {
+      icon: RiPencilRuler2Line,
       title: 'Desain UI/UX',
-      color: 'from-blue-500 to-indigo-600 dark:from-blue-400 dark:to-indigo-500',
-      description: 'Menciptakan antarmuka yang indah dan intuitif berorientasi pengguna.',
-      skills: ['Figma', 'Wireframing', 'Prototyping', 'UX Research', 'User Testing', 'Design System', 'Adobe XD', 'Visual Design'],
+      color: '#a855f7',
+      gradFrom: '#7c3aed',
+      gradTo: '#a855f7',
+      description: 'Menciptakan antarmuka yang indah, intuitif, dan berpusat pada pengguna.',
+      skills: [
+        { name: 'Figma',               level: 95 },
+        { name: 'UX Research',         level: 88 },
+        { name: 'Prototyping',         level: 92 },
+        { name: 'Wireframing',         level: 90 },
+        { name: 'Design System',       level: 85 },
+        { name: 'User Testing',        level: 82 },
+        { name: 'Adobe XD',           level: 78 },
+        { name: 'Visual Design',       level: 88 },
+      ],
     },
     {
+      icon: RiCodeSSlashLine,
       title: 'Pengembangan Web',
-      color: 'from-purple-500 to-pink-600 dark:from-purple-400 dark:to-pink-500',
-      description: 'Menyusun kode web bersih, cepat, dan responsif dari awal.',
-      skills: ['HTML', 'CSS', 'JavaScript', 'React', 'PHP', 'Laravel', 'MySQL', 'Tailwind CSS', 'REST APIs', 'Vite'],
+      color: '#06b6d4',
+      gradFrom: '#0284c7',
+      gradTo: '#06b6d4',
+      description: 'Menyusun kode web bersih, cepat, dan responsif dengan teknologi modern.',
+      skills: [
+        { name: 'React.js',            level: 90 },
+        { name: 'JavaScript / ES6+',   level: 88 },
+        { name: 'HTML / CSS',          level: 95 },
+        { name: 'Tailwind CSS',        level: 92 },
+        { name: 'PHP / Laravel',       level: 82 },
+        { name: 'MySQL',               level: 80 },
+        { name: 'REST API',            level: 85 },
+        { name: 'Node.js',             level: 72 },
+      ],
     },
     {
-      title: 'Peralatan & Kolaborasi',
-      color: 'from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-500',
-      description: 'Platform andalan untuk manajemen proyek dan versi kontrol.',
-      skills: ['Git', 'GitHub', 'VS Code', 'Jira', 'Trello', 'Npm / Yarn', 'Postman', 'Figma DevMode'],
+      icon: RiToolsLine,
+      title: 'Alat & Kolaborasi',
+      color: '#ec4899',
+      gradFrom: '#be185d',
+      gradTo: '#ec4899',
+      description: 'Platform andalan untuk manajemen proyek, kontrol versi, dan kolaborasi tim.',
+      skills: [
+        { name: 'Git / GitHub',        level: 88 },
+        { name: 'VS Code',             level: 95 },
+        { name: 'Postman',             level: 82 },
+        { name: 'Figma Dev Mode',      level: 85 },
+        { name: 'Jira / Trello',       level: 80 },
+        { name: 'Docker (Basic)',      level: 60 },
+        { name: 'Vite / Webpack',      level: 78 },
+        { name: 'Firebase',            level: 75 },
+      ],
     },
   ]
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.18 } },
   }
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: 'easeOut' },
-    },
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: 'easeOut' } },
   }
 
   return (
-    <section id="skills" className="py-24 px-6 bg-gray-50 dark:bg-gray-950 theme-transition">
+    <section
+      id="skills"
+      className="py-24 px-6"
+      style={{ backgroundColor: '#0a0a0f' }}
+    >
       <div className="max-w-6xl mx-auto">
-        {/* Title */}
-        <motion.h2
+        {/* Header */}
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight"
+          className="text-center mb-16"
         >
-          Keahlian & Kompetensi
-        </motion.h2>
+          <p className="text-purple-400 font-mono text-sm tracking-widest uppercase mb-3">
+            // what i can do
+          </p>
+          <h2 className="font-grotesk text-4xl md:text-5xl font-bold text-white mb-4">
+            Keahlian &amp; <span className="gradient-text-cyber">Kompetensi</span>
+          </h2>
+          <div className="section-underline mt-4" />
+        </motion.div>
 
-        <motion.div
-          initial={{ width: 0 }}
-          whileInView={{ width: 60 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="h-1.5 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 rounded-full mx-auto mb-16"
-        ></motion.div>
-
-        {/* Skills Cards Grid */}
+        {/* Cards Grid */}
         <motion.div
           className="grid md:grid-cols-3 gap-8"
           initial="hidden"
           whileInView="visible"
           variants={containerVariants}
-          viewport={{ once: true, amount: 0.15 }}
+          viewport={{ once: true, amount: 0.1 }}
         >
-          {skillCategories.map((category, idx) => (
-            <motion.div
-              key={idx}
-              variants={cardVariants}
-              whileHover={{ y: -8 }}
-              className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-lg shadow-gray-150/5 dark:shadow-black/10 hover:shadow-xl dark:hover:shadow-black/20 theme-transition flex flex-col justify-between"
-            >
-              <div>
-                {/* Category Header */}
-                <h3 className={`text-2xl font-extrabold bg-gradient-to-r ${category.color} bg-clip-text text-transparent mb-2`}>
-                  {category.title}
-                </h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6 leading-relaxed">
+          {skillCategories.map((category, catIdx) => {
+            const Icon = category.icon
+            return (
+              <motion.div
+                key={catIdx}
+                variants={cardVariants}
+                whileHover={{ y: -8 }}
+                className="p-8 rounded-3xl flex flex-col gap-6 card-hover-glow"
+                style={{
+                  background: 'rgba(19,19,42,0.8)',
+                  border: '1px solid rgba(168,85,247,0.12)',
+                }}
+              >
+                {/* Header */}
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center"
+                    style={{
+                      background: `${category.color}18`,
+                      border: `1px solid ${category.color}30`,
+                      boxShadow: `0 0 15px ${category.color}20`,
+                    }}
+                  >
+                    <Icon style={{ color: category.color, fontSize: '1.2rem' }} />
+                  </div>
+                  <div>
+                    <h3
+                      className="font-grotesk font-bold text-lg"
+                      style={{ color: category.color }}
+                    >
+                      {category.title}
+                    </h3>
+                  </div>
+                </div>
+
+                <p className="text-gray-500 text-sm leading-relaxed -mt-2">
                   {category.description}
                 </p>
 
-                {/* Skill Badges */}
-                <div className="flex flex-wrap gap-2.5">
+                {/* Skill Progress Bars */}
+                <div className="space-y-4">
                   {category.skills.map((skill, i) => (
-                    <motion.span
+                    <div
                       key={i}
-                      whileHover={{ scale: 1.08, y: -1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-3.5 py-1.5 rounded-xl text-sm font-semibold border border-transparent hover:border-gray-300 dark:hover:border-gray-700 hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-colors cursor-pointer"
+                      onMouseEnter={() => setHoveredSkill(`${catIdx}-${i}`)}
+                      onMouseLeave={() => setHoveredSkill(null)}
+                      className="group"
                     >
-                      {skill}
-                    </motion.span>
+                      <div className="flex justify-between items-center mb-1.5">
+                        <span className="text-gray-300 text-sm font-medium group-hover:text-white transition-colors">
+                          {skill.name}
+                        </span>
+                        <span
+                          className="text-xs font-mono font-bold transition-colors"
+                          style={{ color: hoveredSkill === `${catIdx}-${i}` ? category.color : '#6b7280' }}
+                        >
+                          {skill.level}%
+                        </span>
+                      </div>
+                      <div
+                        className="h-1.5 w-full rounded-full overflow-hidden"
+                        style={{ background: 'rgba(255,255,255,0.06)' }}
+                      >
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${skill.level}%` }}
+                          transition={{ duration: 1, delay: i * 0.06, ease: 'easeOut' }}
+                          viewport={{ once: true }}
+                          className="h-full rounded-full relative overflow-hidden"
+                          style={{
+                            background: `linear-gradient(to right, ${category.gradFrom}, ${category.gradTo})`,
+                            boxShadow: hoveredSkill === `${catIdx}-${i}` ? `0 0 10px ${category.color}60` : 'none',
+                          }}
+                        >
+                          {/* Shimmer overlay */}
+                          <div className="absolute inset-0 bg-shimmer bg-[length:200%_100%] animate-text-shimmer opacity-30" />
+                        </motion.div>
+                      </div>
+                    </div>
                   ))}
                 </div>
-              </div>
 
-              {/* Graphical element: small decorative bar */}
-              <div className={`h-1.5 w-16 bg-gradient-to-r ${category.color} rounded-full mt-8`}></div>
-            </motion.div>
-          ))}
+                {/* Colored bottom bar */}
+                <div
+                  className="h-1 w-16 rounded-full mt-auto"
+                  style={{ background: `linear-gradient(to right, ${category.gradFrom}, ${category.gradTo})`, boxShadow: `0 0 10px ${category.color}40` }}
+                />
+              </motion.div>
+            )
+          })}
+        </motion.div>
+
+        {/* Tech Stack Quick Icons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="mt-14 text-center"
+        >
+          <p className="text-gray-600 font-mono text-xs tracking-widest uppercase mb-6">// Tech Stack Utama</p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {['React', 'TypeScript', 'Figma', 'Laravel', 'Tailwind', 'MySQL', 'Git', 'Firebase', 'Node.js', 'Framer Motion'].map((tech, i) => (
+              <motion.span
+                key={i}
+                whileHover={{ scale: 1.1, y: -3 }}
+                whileTap={{ scale: 0.95 }}
+                className="cyber-tag cursor-pointer"
+              >
+                {tech}
+              </motion.span>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>
