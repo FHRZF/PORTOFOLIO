@@ -50,7 +50,7 @@ export default function About() {
     <section
       id="about"
       className="py-24 px-6"
-      style={{ backgroundColor: '#0d0d1a' }}
+      style={{ backgroundColor: 'var(--bg-secondary)' }}
     >
       <div className="max-w-6xl mx-auto">
         {/* Section Header */}
@@ -233,7 +233,7 @@ export default function About() {
                     {/* Dot */}
                     <div
                       className="absolute -left-5 top-1.5 w-4 h-4 rounded-full border-2 flex items-center justify-center"
-                      style={{ borderColor: item.color, backgroundColor: '#0a0a0f', boxShadow: `0 0 10px ${item.color}60` }}
+                      style={{ borderColor: item.color, backgroundColor: 'var(--bg-primary)', boxShadow: `0 0 10px ${item.color}60` }}
                     >
                       <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }} />
                     </div>

@@ -5,13 +5,13 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   const socials = [
-    { name: 'GitHub', icon: FaGithub, href: 'https://github.com/fahrizfitra' },
-    { name: 'LinkedIn', icon: FaLinkedin, href: 'https://linkedin.com/in/fahrizfitra' },
-    { name: 'Instagram', icon: FaInstagram, href: 'https://instagram.com/fahrizfitra' },
+    { name: 'GitHub', icon: FaGithub, href: 'https://github.com/FHRZF' },
+    { name: 'LinkedIn', icon: FaLinkedin, href: 'https://www.linkedin.com/in/fahrizfita' },
+    { name: 'Instagram', icon: FaInstagram, href: 'https://www.instagram.com/fahriz.fitra/' },
   ]
 
   return (
-    <footer className="bg-gray-900 text-white border-t border-gray-800 py-16 px-6 theme-transition">
+    <footer className="text-white border-t border-purple-500/10 py-16 px-6 theme-transition" style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}

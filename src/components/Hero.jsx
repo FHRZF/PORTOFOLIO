@@ -53,7 +53,7 @@ export default function Hero() {
     <section
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
-      style={{ backgroundColor: '#0a0a0f' }}
+      style={{ backgroundColor: 'var(--bg-primary)' }}
     >
       {/* Cyber Grid Background */}
       <div

@@ -29,7 +29,7 @@ export default function Blog() {
   ]
 
   return (
-    <section id="blog" className="py-24 px-6 bg-white dark:bg-gray-900 theme-transition">
+    <section id="blog" className="py-24 px-6 theme-transition" style={{ backgroundColor: 'var(--bg-card-alt)', color: 'var(--text-primary)' }}>
       <div className="max-w-6xl mx-auto">
         {/* Title */}
         <motion.h2
@@ -37,7 +37,7 @@ export default function Blog() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight"
+          className="text-4xl md:text-5xl font-bold mb-6 text-center tracking-tight"
         >
           Artikel Terbaru
         </motion.h2>

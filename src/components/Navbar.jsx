@@ -58,6 +58,9 @@ export default function Navbar() {
       style={{
         boxShadow: scrolled ? '0 4px 30px rgba(168,85,247,0.1)' : 'none',
         borderBottom: scrolled ? '1px solid rgba(168,85,247,0.2)' : '1px solid rgba(168,85,247,0.08)',
+        background: 'var(--bg-glass)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
       }}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">

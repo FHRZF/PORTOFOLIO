@@ -49,7 +49,7 @@ export default function Testimonials() {
   }
 
   return (
-    <section id="testimonials" className="py-24 px-6 bg-gray-50 dark:bg-gray-950 theme-transition">
+    <section id="testimonials" className="py-24 px-6 theme-transition" style={{ backgroundColor: 'var(--bg-card-alt)', color: 'var(--text-primary)' }}>
       <div className="max-w-6xl mx-auto">
         {/* Title */}
         <motion.h2
@@ -57,7 +57,7 @@ export default function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 text-center tracking-tight"
+          className="text-4xl md:text-5xl font-bold mb-6 text-center tracking-tight"
         >
           Testimoni Klien
         </motion.h2>
@@ -83,7 +83,8 @@ export default function Testimonials() {
               key={testimonial.id}
               variants={itemVariants}
               whileHover={{ y: -6 }}
-              className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-lg hover:shadow-xl dark:hover:shadow-black/25 transition-all duration-300 flex flex-col justify-between"
+              className="p-8 rounded-3xl border shadow-lg hover:shadow-xl transition-all duration-300 flex flex-col justify-between card-hover-glow theme-transition"
+              style={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border-color)' }}
             >
               <div>
                 {/* Rating Stars */}
@@ -94,13 +95,13 @@ export default function Testimonials() {
                 </div>
 
                 {/* Content Quote */}
-                <p className="text-gray-600 dark:text-gray-300 italic mb-8 leading-relaxed text-sm md:text-base">
+                <p className="italic mb-8 leading-relaxed text-sm md:text-base" style={{ color: 'var(--text-secondary)' }}>
                   "{testimonial.content}"
                 </p>
               </div>
 
               {/* Author Profile */}
-              <div className="flex items-center gap-4 border-t border-gray-100 dark:border-gray-800 pt-5">
+              <div className="flex items-center gap-4 border-t pt-5" style={{ borderColor: 'var(--border-color)' }}>
                 <img
                   src={testimonial.avatar}
                   alt={testimonial.name}
@@ -108,10 +109,10 @@ export default function Testimonials() {
                   loading="lazy"
                 />
                 <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-base">
+                  <h4 className="font-bold text-base">
                     {testimonial.name}
                   </h4>
-                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                  <p className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
                     {testimonial.role}
                   </p>
                 </div>

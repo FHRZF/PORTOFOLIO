@@ -5,15 +5,46 @@
 @tailwind utilities;
 
 :root {
+  /* ── Neon Accent Colors (stay the same in both modes) ── */
   --neon-purple: #a855f7;
   --neon-blue: #3b82f6;
   --neon-cyan: #06b6d4;
   --neon-pink: #ec4899;
-  --cyber-black: #0a0a0f;
-  --cyber-darker: #0d0d1a;
-  --cyber-dark: #111128;
-  --cyber-card: #13132a;
-  --cyber-border: #1e1e3f;
+
+  /* ── Dark Mode Defaults ── */
+  --bg-primary:   #0a0a0f;
+  --bg-secondary: #0d0d1a;
+  --bg-card:      #13132a;
+  --bg-card-alt:  #111128;
+  --bg-glass:     rgba(19, 19, 42, 0.6);
+  --border-color: rgba(168, 85, 247, 0.15);
+  --text-primary:   #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted:     #64748b;
+  --text-code:      #c4b5fd;
+  --scrollbar-track: #0d0d1a;
+
+  /* backward-compat aliases */
+  --cyber-black:  var(--bg-primary);
+  --cyber-darker: var(--bg-secondary);
+  --cyber-dark:   var(--bg-card-alt);
+  --cyber-card:   var(--bg-card);
+  --cyber-border: var(--border-color);
+}
+
+/* ── Light Mode overrides applied when <html> lacks .dark ── */
+html:not(.dark) {
+  --bg-primary:   #f5f3ff;
+  --bg-secondary: #ede9fe;
+  --bg-card:      #ffffff;
+  --bg-card-alt:  #faf5ff;
+  --bg-glass:     rgba(255, 255, 255, 0.75);
+  --border-color: rgba(168, 85, 247, 0.2);
+  --text-primary:   #1e1b4b;
+  --text-secondary: #4c4888;
+  --text-muted:     #7c6fa0;
+  --text-code:      #7c3aed;
+  --scrollbar-track: #ede9fe;
 }
 
 * {
@@ -27,17 +58,26 @@ html {
   scroll-padding-top: 80px;
 }
 
+html, body {
+  cursor: none; /* Hides default OS cursor — replaced by JS blob */
+}
+
+/* Allow cursor on touch devices */
+@media (pointer: coarse) {
+  html, body { cursor: auto; }
+}
+
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background-color: var(--cyber-black);
-  color: #e2e8f0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.35s ease, color 0.35s ease;
 }
 
 /* ─── Neon Custom Scrollbar ──────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0d0d1a; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #7c3aed, #06b6d4);
   border-radius: 3px;
@@ -257,10 +297,94 @@ body {
   margin: 0 auto;
 }
 
-/* ─── Custom Cursor ──────────────────────────────────────── */
-.custom-cursor {
-  mix-blend-mode: normal;
+/* ─── Magnetic Blob Cursor ───────────────────────────────── */
+.cursor-blob {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  background: rgba(168, 85, 247, 0.18);
+  border: 1.5px solid rgba(168, 85, 247, 0.55);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  /* offset so center of blob tracks the mouse */
+  margin-left: -20px;
+  margin-top: -20px;
+  transition:
+    width 0.25s ease,
+    height 0.25s ease,
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    opacity 0.3s ease;
+  will-change: transform;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.25);
 }
-.cursor-follower {
-  mix-blend-mode: normal;
+
+.cursor-blob--hover {
+  width: 64px;
+  height: 64px;
+  margin-left: -32px;
+  margin-top: -32px;
+  background: rgba(168, 85, 247, 0.1);
+  border-color: rgba(168, 85, 247, 0.9);
+  box-shadow:
+    0 0 20px rgba(168, 85, 247, 0.5),
+    0 0 40px rgba(168, 85, 247, 0.2);
+}
+
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  background: #a855f7;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100000;
+  opacity: 0;
+  margin-left: -3.5px;
+  margin-top: -3.5px;
+  transition:
+    width 0.2s ease,
+    height 0.2s ease,
+    opacity 0.3s ease,
+    background 0.2s ease;
+  will-change: transform;
+  box-shadow: 0 0 6px rgba(168, 85, 247, 0.8);
+}
+
+.cursor-dot--hover {
+  width: 5px;
+  height: 5px;
+  margin-left: -2.5px;
+  margin-top: -2.5px;
+  background: #e879f9;
+}
+
+/* ─── Typewriter Cursor Blink ──────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 4px;
+  background: #a855f7;
+  border-radius: 2px;
+  margin-left: 6px;
+  vertical-align: middle;
+  animation: blink 0.85s step-end infinite;
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
+}
+
+/* ─── Scan keyframe (referenced by .scan-line) ─────────────── */
+@keyframes scan {
+  0%   { top: 0; }
+  100% { top: 100vh; }
 }

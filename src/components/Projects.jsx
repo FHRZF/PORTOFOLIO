@@ -45,7 +45,7 @@ export default function Projects() {
   ]
 
   return (
-    <section id="projects" className="py-24 px-6" style={{ backgroundColor: '#111128' }}>
+    <section id="projects" className="py-24 px-6 theme-transition" style={{ backgroundColor: 'var(--bg-card-alt)' }}>
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div

@@ -25,7 +25,7 @@ function AppContent() {
   }, [])
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#0a0a0f', color: '#e2e8f0' }}>
+    <div className="min-h-screen theme-transition" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
       {/* Global scanning line effect */}
       <div className="scan-line" />
       <Navbar />

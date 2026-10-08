@@ -19,7 +19,7 @@ export default function Contact() {
     {
       id: 1,
       name: 'Email Resmi',
-      value: 'fahriz.fitra@example.com',
+      value: 'fahrizfitraannas@gmail.com',
       icon: HiOutlineMail,
       link: 'mailto:fahriz.fitra@example.com',
       color: 'text-blue-500 dark:text-blue-400',
@@ -126,7 +126,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="py-24 px-6 bg-gray-50 dark:bg-gray-950 theme-transition">
+    <section id="contact" className="py-24 px-6 theme-transition" style={{ backgroundColor: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>
       <div className="max-w-6xl mx-auto">
         {/* Title */}
         <motion.div
@@ -136,7 +136,7 @@ export default function Contact() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
             Mari Terhubung
           </h2>
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-xl mx-auto">

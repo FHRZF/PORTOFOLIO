@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# File besar — jangan upload ke GitHub (>100MB limit)
+*.pdf
+*.zip

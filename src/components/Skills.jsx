@@ -76,7 +76,7 @@ export default function Skills() {
     <section
       id="skills"
       className="py-24 px-6"
-      style={{ backgroundColor: '#0a0a0f' }}
+      style={{ backgroundColor: 'var(--bg-primary)' }}
     >
       <div className="max-w-6xl mx-auto">
         {/* Header */}

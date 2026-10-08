@@ -1,17 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { HiArrowNarrowRight, HiX, HiCheck } from 'react-icons/hi'
-import { RiExternalLinkLine, RiFigmaLine } from 'react-icons/ri'
+import { HiArrowNarrowRight, HiX, HiCheck, HiChevronLeft, HiChevronRight, HiZoomIn } from 'react-icons/hi'
+import { RiFigmaLine } from 'react-icons/ri'
+import { MdGridView, MdViewModule } from 'react-icons/md'
+
+const GALLERY_PER_PAGE = 12
 
 export default function Portfolio() {
   const [activeFilter, setActiveFilter] = useState('all')
   const [selectedProject, setSelectedProject] = useState(null)
+
+  // Gallery state
+  const [galleryImages, setGalleryImages] = useState([])
+  const [galleryPage, setGalleryPage] = useState(1)
+  const [galleryLoading, setGalleryLoading] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(null)
+  const [gridSize, setGridSize] = useState('medium')
+  const [imgErrors, setImgErrors] = useState({})
 
   const filters = [
     { name: 'Semua', value: 'all' },
     { name: 'Mobile', value: 'mobile' },
     { name: 'Web', value: 'web' },
     { name: 'Dashboard', value: 'dashboard' },
+    { name: 'Desain Grafis', value: 'grafis' },
   ]
 
   const projects = [
@@ -21,7 +33,7 @@ export default function Portfolio() {
       category: 'mobile',
       description: 'Desain UI lengkap untuk aplikasi kesehatan mental berbasis AI yang membantu pengguna memantau suasana hati harian, meditasi terpandu, dan konsultasi dengan psikolog digital.',
       longDescription: 'Proyek ini memenangkan Juara 1 Lomba UI/UX Nasional 2023. Fokus pada penyelesaian masalah: pengguna sering tidak menyadari tanda-tanda burnout hingga terlambat. Kami mendesain mood tracker harian dengan visualisasi data 30 hari, breathing exercise interaktif, dan sistem notifikasi berbasis pola suasana hati.',
-      problem: 'Pengguna tidak menyadari gejala burnout &amp; stres kronis karena tidak ada cara mudah memantau kesehatan mental sehari-hari.',
+      problem: 'Pengguna tidak menyadari gejala burnout & stres kronis karena tidak ada cara mudah memantau kesehatan mental sehari-hari.',
       solution: 'AI-powered mood logger dengan insight mingguan, meditasi berbasis kondisi pengguna, dan booking psikolog dalam 3 klik.',
       outcome: 'SUS Score 94/100 pada user testing. Memenangkan Juara 1 Lomba UI/UX Nasional 2023.',
       image: 'https://images.unsplash.com/photo-1559028012-481c04fa702d?w=900&h=600&fit=crop',
@@ -71,10 +83,32 @@ export default function Portfolio() {
       tools: ['Figma', 'ArcGIS Mockup', 'Design Sprint', 'Miro'],
       accent: '#10b981',
     },
-
   ]
 
-  const filteredProjects = activeFilter === 'all'
+  // Load gallery images when grafis tab is first selected
+  useEffect(() => {
+    if (activeFilter === 'grafis' && galleryImages.length === 0) {
+      setGalleryLoading(true)
+      fetch('/designs/manifest.json')
+        .then(r => r.json())
+        .then(data => {
+          setGalleryImages(data.files || [])
+          setGalleryLoading(false)
+        })
+        .catch(() => {
+          const fallback = Array.from({ length: 113 }, (_, i) => `/designs/${i + 1}.jpg`)
+          setGalleryImages(fallback)
+          setGalleryLoading(false)
+        })
+    }
+    // Reset gallery page when switching tabs
+    if (activeFilter !== 'grafis') {
+      setGalleryPage(1)
+      setLightboxIndex(null)
+    }
+  }, [activeFilter])
+
+  const filteredProjects = activeFilter === 'all' || activeFilter === 'grafis'
     ? projects
     : projects.filter(p => p.category === activeFilter)
 
@@ -85,9 +119,60 @@ export default function Portfolio() {
     '#10b981': 'rgba(16,185,129,',
   }
 
+  // ── Gallery helpers ──────────────────────────────────────────────
+  const galleryTotalPages = Math.ceil(galleryImages.length / GALLERY_PER_PAGE)
+  const galleryStart = (galleryPage - 1) * GALLERY_PER_PAGE
+  const pageImages = galleryImages.slice(galleryStart, galleryStart + GALLERY_PER_PAGE)
+
+  const globalLightboxIndex = lightboxIndex !== null ? galleryStart + lightboxIndex : null
+
+  const goToGalleryPage = (page) => {
+    setGalleryPage(page)
+    document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const prevImage = useCallback(() => {
+    if (lightboxIndex === null) return
+    if (lightboxIndex > 0) {
+      setLightboxIndex(lightboxIndex - 1)
+    } else if (galleryPage > 1) {
+      setGalleryPage(p => p - 1)
+      setLightboxIndex(GALLERY_PER_PAGE - 1)
+    }
+  }, [lightboxIndex, galleryPage])
+
+  const nextImage = useCallback(() => {
+    if (lightboxIndex === null) return
+    if (lightboxIndex < pageImages.length - 1) {
+      setLightboxIndex(lightboxIndex + 1)
+    } else if (galleryPage < galleryTotalPages) {
+      setGalleryPage(p => p + 1)
+      setLightboxIndex(0)
+    }
+  }, [lightboxIndex, pageImages.length, galleryPage, galleryTotalPages])
+
+  useEffect(() => {
+    if (lightboxIndex === null) return
+    const handler = (e) => {
+      if (e.key === 'ArrowLeft') prevImage()
+      if (e.key === 'ArrowRight') nextImage()
+      if (e.key === 'Escape') setLightboxIndex(null)
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [lightboxIndex, prevImage, nextImage])
+
+  const handleImgError = (src) => setImgErrors(prev => ({ ...prev, [src]: true }))
+
+  const gridCols = gridSize === 'small'
+    ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6'
+    : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4'
+  const cardHeight = gridSize === 'small' ? 'h-32 sm:h-36' : 'h-44 sm:h-52 md:h-56'
+
   return (
-    <section id="portfolio" className="py-24 px-6" style={{ backgroundColor: '#0d0d1a' }}>
+    <section id="portfolio" className="py-24 px-6 theme-transition" style={{ backgroundColor: 'var(--bg-secondary)' }}>
       <div className="max-w-6xl mx-auto">
+
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -98,10 +183,12 @@ export default function Portfolio() {
         >
           <p className="text-purple-400 font-mono text-sm tracking-widest uppercase mb-3">// design work</p>
           <h2 className="font-grotesk text-4xl md:text-5xl font-bold text-white mb-4">
-            Portofolio <span className="gradient-text-cyber">UI/UX</span>
+            Desain <span className="gradient-text-cyber">Grafis</span>
           </h2>
           <p className="text-gray-500 max-w-xl mx-auto text-sm">
-            Studi kasus nyata dari desain yang berfokus pada solusi pengguna &amp; dampak bisnis terukur.
+            {activeFilter === 'grafis'
+              ? 'Kumpulan design feed Instagram & material visual produk HUMMATECH.'
+              : 'Studi kasus nyata dari desain yang berfokus pada solusi pengguna & dampak bisnis terukur.'}
           </p>
           <div className="section-underline mt-4" />
         </motion.div>
@@ -127,82 +214,270 @@ export default function Portfolio() {
               }}
             >
               {f.name}
+              {f.value === 'grafis' && (
+                <span
+                  className="ml-2 text-xs px-1.5 py-0.5 rounded-md font-mono"
+                  style={{
+                    background: activeFilter === 'grafis' ? 'rgba(255,255,255,0.2)' : 'rgba(168,85,247,0.2)',
+                    color: activeFilter === 'grafis' ? '#fff' : '#a855f7',
+                  }}
+                >
+                  113
+                </span>
+              )}
             </motion.button>
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <motion.div layout className="grid md:grid-cols-2 gap-8">
-          <AnimatePresence mode="popLayout">
-            {filteredProjects.map((project) => {
-              const alpha = accentColorMap[project.accent] || 'rgba(168,85,247,'
-              return (
-                <motion.div
-                  layout
-                  key={project.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.4 }}
-                  whileHover={{ y: -8 }}
-                  className="rounded-3xl overflow-hidden flex flex-col group cursor-pointer card-hover-glow"
-                  style={{
-                    background: 'rgba(19,19,42,0.8)',
-                    border: `1px solid ${alpha}0.15)`,
-                  }}
-                >
-                  {/* Image */}
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      loading="lazy"
+        {/* ── UI/UX Projects Grid ── */}
+        <AnimatePresence mode="wait">
+          {activeFilter !== 'grafis' && (
+            <motion.div
+              key="projects"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div layout className="grid md:grid-cols-2 gap-8">
+                <AnimatePresence mode="popLayout">
+                  {filteredProjects.map((project) => {
+                    const alpha = accentColorMap[project.accent] || 'rgba(168,85,247,'
+                    return (
+                      <motion.div
+                        layout
+                        key={project.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.4 }}
+                        whileHover={{ y: -8 }}
+                        className="rounded-3xl overflow-hidden flex flex-col group cursor-pointer card-hover-glow"
+                        style={{
+                          background: 'rgba(19,19,42,0.8)',
+                          border: `1px solid ${alpha}0.15)`,
+                        }}
+                      >
+                        {/* Image */}
+                        <div className="relative h-56 overflow-hidden">
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${alpha}0.85), rgba(10,10,15,0.2))` }} />
+                          <span
+                            className="absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider font-mono"
+                            style={{ background: `${alpha}0.25)`, border: `1px solid ${alpha}0.4)`, color: project.accent, backdropFilter: 'blur(8px)' }}
+                          >
+                            {project.category}
+                          </span>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-7 flex flex-col flex-1">
+                          <h3 className="font-grotesk text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">
+                            {project.title}
+                          </h3>
+                          <p className="text-gray-500 text-sm leading-relaxed mb-5 flex-1">
+                            {project.description}
+                          </p>
+
+                          {/* Tags */}
+                          <div className="flex flex-wrap gap-2 mb-5">
+                            {project.tags.map((tag, i) => (
+                              <span key={i} className="cyber-tag">{tag}</span>
+                            ))}
+                          </div>
+
+                          {/* CTA */}
+                          <motion.button
+                            onClick={() => setSelectedProject(project)}
+                            whileHover={{ x: 4 }}
+                            className="flex items-center gap-2 text-sm font-bold transition-all cursor-pointer"
+                            style={{ color: project.accent }}
+                          >
+                            Baca Studi Kasus
+                            <HiArrowNarrowRight className="transition-transform text-base group-hover:translate-x-1" />
+                          </motion.button>
+                        </div>
+                      </motion.div>
+                    )
+                  })}
+                </AnimatePresence>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* ── Desain Grafis Gallery ── */}
+          {activeFilter === 'grafis' && (
+            <motion.div
+              key="gallery"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Gallery controls */}
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+                <p className="text-gray-500 text-sm font-mono">
+                  {galleryLoading
+                    ? 'Memuat...'
+                    : `${galleryImages.length} desain · Halaman ${galleryPage} dari ${galleryTotalPages}`}
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setGridSize('medium')}
+                    title="Grid medium"
+                    className="p-2 rounded-xl transition-all cursor-pointer"
+                    style={{
+                      background: gridSize === 'medium' ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
+                      border: `1px solid ${gridSize === 'medium' ? 'rgba(168,85,247,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                      color: gridSize === 'medium' ? '#a855f7' : '#6b7280',
+                    }}
+                  >
+                    <MdViewModule className="text-lg" />
+                  </button>
+                  <button
+                    onClick={() => setGridSize('small')}
+                    title="Grid kecil"
+                    className="p-2 rounded-xl transition-all cursor-pointer"
+                    style={{
+                      background: gridSize === 'small' ? 'rgba(168,85,247,0.2)' : 'rgba(255,255,255,0.05)',
+                      border: `1px solid ${gridSize === 'small' ? 'rgba(168,85,247,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                      color: gridSize === 'small' ? '#a855f7' : '#6b7280',
+                    }}
+                  >
+                    <MdGridView className="text-lg" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Skeleton loading */}
+              {galleryLoading && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {Array.from({ length: 12 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="rounded-2xl animate-pulse h-48"
+                      style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.1)' }}
                     />
-                    <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${alpha}0.85), rgba(10,10,15,0.2))` }} />
-                    <span
-                      className="absolute top-4 left-4 text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider font-mono"
-                      style={{ background: `${alpha}0.25)`, border: `1px solid ${alpha}0.4)`, color: project.accent, backdropFilter: 'blur(8px)' }}
-                    >
-                      {project.category}
-                    </span>
-                  </div>
+                  ))}
+                </div>
+              )}
 
-                  {/* Content */}
-                  <div className="p-7 flex flex-col flex-1">
-                    <h3 className="font-grotesk text-lg font-bold text-white mb-2 group-hover:text-purple-400 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-500 text-sm leading-relaxed mb-5 flex-1">
-                      {project.description}
-                    </p>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-5">
-                      {project.tags.map((tag, i) => (
-                        <span key={i} className="cyber-tag">{tag}</span>
-                      ))}
-                    </div>
-
-                    {/* CTA */}
-                    <motion.button
-                      onClick={() => setSelectedProject(project)}
-                      whileHover={{ x: 4 }}
-                      className="flex items-center gap-2 text-sm font-bold transition-all cursor-pointer"
-                      style={{ color: project.accent }}
-                    >
-                      Baca Studi Kasus
-                      <HiArrowNarrowRight className="transition-transform text-base group-hover:translate-x-1" />
-                    </motion.button>
-                  </div>
+              {/* Image Grid */}
+              {!galleryLoading && (
+                <motion.div layout className={`grid ${gridCols} gap-3 md:gap-4`}>
+                  <AnimatePresence mode="popLayout">
+                    {pageImages.map((src, idx) =>
+                      !imgErrors[src] && (
+                        <motion.div
+                          key={src}
+                          layout
+                          initial={{ opacity: 0, scale: 0.92 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.92 }}
+                          transition={{ duration: 0.3, delay: idx * 0.025 }}
+                          className={`relative ${cardHeight} rounded-2xl overflow-hidden group cursor-pointer`}
+                          style={{
+                            border: '1px solid rgba(168,85,247,0.12)',
+                            background: 'rgba(19,19,42,0.8)',
+                          }}
+                          onClick={() => setLightboxIndex(idx)}
+                          whileHover={{ scale: 1.03, zIndex: 10 }}
+                        >
+                          <img
+                            src={src}
+                            alt={`Desain ${galleryStart + idx + 1}`}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
+                            onError={() => handleImgError(src)}
+                          />
+                          <div
+                            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+                            style={{ background: 'rgba(10,10,20,0.6)', backdropFilter: 'blur(2px)' }}
+                          >
+                            <div
+                              className="w-10 h-10 rounded-full flex items-center justify-center"
+                              style={{ background: 'rgba(168,85,247,0.9)', boxShadow: '0 0 20px rgba(168,85,247,0.6)' }}
+                            >
+                              <HiZoomIn className="text-white text-lg" />
+                            </div>
+                          </div>
+                          <span
+                            className="absolute top-2 left-2 text-xs font-mono px-2 py-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{ background: 'rgba(0,0,0,0.7)', color: '#a855f7', border: '1px solid rgba(168,85,247,0.3)' }}
+                          >
+                            #{galleryStart + idx + 1}
+                          </span>
+                        </motion.div>
+                      )
+                    )}
+                  </AnimatePresence>
                 </motion.div>
-              )
-            })}
-          </AnimatePresence>
-        </motion.div>
+              )}
+
+              {/* Pagination */}
+              {!galleryLoading && galleryTotalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-10 flex-wrap">
+                  <button
+                    onClick={() => goToGalleryPage(galleryPage - 1)}
+                    disabled={galleryPage === 1}
+                    className="w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                    style={{ border: '1px solid rgba(168,85,247,0.2)', color: '#a855f7', background: 'rgba(168,85,247,0.05)' }}
+                  >
+                    <HiChevronLeft />
+                  </button>
+
+                  {Array.from({ length: galleryTotalPages }, (_, i) => i + 1).map(page => {
+                    const isActive = page === galleryPage
+                    const isNear = Math.abs(page - galleryPage) <= 2
+                    const isEdge = page === 1 || page === galleryTotalPages
+                    if (!isNear && !isEdge) {
+                      if (page === galleryPage - 3 || page === galleryPage + 3) {
+                        return <span key={page} className="text-gray-600 px-1 text-sm">...</span>
+                      }
+                      return null
+                    }
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => goToGalleryPage(page)}
+                        className="w-9 h-9 rounded-xl text-sm font-bold transition-all cursor-pointer font-mono"
+                        style={isActive ? {
+                          background: 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                          color: '#fff',
+                          boxShadow: '0 0 16px rgba(168,85,247,0.4)',
+                          border: 'none',
+                        } : {
+                          border: '1px solid rgba(168,85,247,0.15)',
+                          color: '#94a3b8',
+                          background: 'rgba(168,85,247,0.04)',
+                        }}
+                      >
+                        {page}
+                      </button>
+                    )
+                  })}
+
+                  <button
+                    onClick={() => goToGalleryPage(galleryPage + 1)}
+                    disabled={galleryPage === galleryTotalPages}
+                    className="w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                    style={{ border: '1px solid rgba(168,85,247,0.2)', color: '#a855f7', background: 'rgba(168,85,247,0.05)' }}
+                  >
+                    <HiChevronRight />
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* MODAL */}
+      {/* ── UI/UX Project MODAL ── */}
       <AnimatePresence>
         {selectedProject && (
           <motion.div
@@ -256,7 +531,7 @@ export default function Portfolio() {
 
                 <div className="p-5 rounded-2xl" style={{ background: 'rgba(168,85,247,0.06)', border: '1px solid rgba(168,85,247,0.15)' }}>
                   <h4 className="text-purple-400 font-bold text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
-                    <HiCheck /> 📈 Dampak &amp; Hasil
+                    <HiCheck /> 📈 Dampak & Hasil
                   </h4>
                   <p className="text-gray-300 font-semibold text-sm">{selectedProject.outcome}</p>
                 </div>
@@ -287,6 +562,76 @@ export default function Portfolio() {
                 </button>
               </div>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Gallery LIGHTBOX ── */}
+      <AnimatePresence>
+        {lightboxIndex !== null && pageImages[lightboxIndex] && !imgErrors[pageImages[lightboxIndex]] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ backgroundColor: 'rgba(0,0,0,0.93)', backdropFilter: 'blur(16px)' }}
+            onClick={() => setLightboxIndex(null)}
+          >
+            {/* Counter */}
+            <div
+              className="absolute top-5 left-1/2 -translate-x-1/2 font-mono text-sm px-4 py-1.5 rounded-full"
+              style={{ background: 'rgba(168,85,247,0.2)', border: '1px solid rgba(168,85,247,0.3)', color: '#c4b5fd' }}
+            >
+              {globalLightboxIndex + 1} / {galleryImages.length}
+            </div>
+
+            {/* Close */}
+            <button
+              onClick={() => setLightboxIndex(null)}
+              className="absolute top-5 right-5 w-10 h-10 rounded-xl flex items-center justify-center text-white cursor-pointer hover:bg-white/10 transition-colors"
+              style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              <HiX className="text-xl" />
+            </button>
+
+            {/* Prev */}
+            <button
+              onClick={(e) => { e.stopPropagation(); prevImage() }}
+              className="absolute left-4 md:left-8 w-12 h-12 rounded-2xl flex items-center justify-center text-white cursor-pointer transition-all hover:scale-110"
+              style={{ background: 'rgba(168,85,247,0.3)', border: '1px solid rgba(168,85,247,0.4)', backdropFilter: 'blur(8px)' }}
+            >
+              <HiChevronLeft className="text-2xl" />
+            </button>
+
+            {/* Image */}
+            <motion.img
+              key={pageImages[lightboxIndex]}
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ duration: 0.22 }}
+              src={pageImages[lightboxIndex]}
+              alt={`Desain ${globalLightboxIndex + 1}`}
+              className="max-w-[90vw] max-h-[88vh] object-contain rounded-2xl"
+              style={{ boxShadow: '0 0 60px rgba(168,85,247,0.25)' }}
+              onClick={(e) => e.stopPropagation()}
+            />
+
+            {/* Next */}
+            <button
+              onClick={(e) => { e.stopPropagation(); nextImage() }}
+              className="absolute right-4 md:right-8 w-12 h-12 rounded-2xl flex items-center justify-center text-white cursor-pointer transition-all hover:scale-110"
+              style={{ background: 'rgba(168,85,247,0.3)', border: '1px solid rgba(168,85,247,0.4)', backdropFilter: 'blur(8px)' }}
+            >
+              <HiChevronRight className="text-2xl" />
+            </button>
+
+            {/* Keyboard hint */}
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-3 text-xs text-gray-600 font-mono">
+              <span>← → navigasi</span>
+              <span>·</span>
+              <span>ESC tutup</span>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
